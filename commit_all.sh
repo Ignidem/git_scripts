@@ -23,18 +23,18 @@ commit(){
 	git commit -m "$message"
 	
 	if [[ ! -z "$2" ]]; then
-		#origin=$(git remote -v | awk '$3=="(push)" {print $1}')
 		origin=$(git remote)
-		branch=$2
-		if [[ $2 == "--current" ]]; then 
-			branch=$(git symbolic-ref --short HEAD)
+		gitbranch=$2
+		if [[ -z $2 ]] || [[ $2 == "--current" ]]; then 
+			gitbranch=$(git symbolic-ref --short HEAD)
 		fi
-		git push $origin $branch
+		echo "$origin $gitbranch"
+		git push $origin $gitbranch
 	fi
 }
 
-origin_dir=$1
-branch=$2
+origin_dir="$1"
+branch="$2"
 grep path './.gitmodules' | sed 's/.*= //' | while read -r p
 do
 	commit "${origin_dir}/${p}/" "$branch"
