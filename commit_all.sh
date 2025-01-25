@@ -3,18 +3,18 @@ submodules(){
 	local branch="$2"
 	gitmodules='./.gitmodules'
 	
-	echo "Checking for submodules in $path"
+	#echo "Checking for submodules in $path"
 	
 	if [[ ! -f $gitmodules ]]; then
-		echo "No submodules found in $path"
+		#echo "No submodules found in $path"
 		return 1
 	fi
 	
 	grep path $gitmodules | sed 's/.*= //' | while read -r p
 	do
-		echo "Found submodule $p"
+		#echo "Found submodule $p"
 		commit "${path}/${p}/" "$branch"
-		echo "Returning to Parent module $path"
+		#echo "Returning to Parent module $path"
 		cd "$path" #return to parent path after each iteration
 	done
 }
@@ -26,9 +26,9 @@ commit(){
 	cd "$path"
 	local name="${PWD##*/}" #get the name of the git repo's directory to use as name
 	
-	submodules "$1" "$2"
+	submodules "$path" "$branch"
 	echo "------------------"
-	echo "QuickPushing $name from $path on branch $branch...";
+	echo $name
 	git status
 		
 	if [[ ! `git status --porcelain` ]]; then
